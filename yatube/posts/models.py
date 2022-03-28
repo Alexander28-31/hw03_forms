@@ -1,4 +1,3 @@
-
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -7,7 +6,7 @@ Group = 'Group'
 
 
 class Post(models.Model):
-    """Модель для хранения постов"""
+    """Модель для хранения постов."""
 
     text = models.TextField(verbose_name='Description')
     pub_date = models.DateTimeField(auto_now_add=True,
@@ -36,7 +35,7 @@ class Post(models.Model):
 
 
 class Group(models.Model):
-    """Модель для тематических сообществ пользователей """
+    """Модель для тематических сообществ пользователей."""
 
     title = models.CharField(max_length=200, verbose_name='Title')
     slug = models.SlugField(unique=True, verbose_name='Slug')
