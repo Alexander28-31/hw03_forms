@@ -5,23 +5,16 @@
   {% for post in page_obj %}
     <div class="container py-5">
       <h1>Все посты пользователя {{ author.username }}</h1>
-      <h3>Всего постов: {{ count }}</h3>
+      <h3>Всего постов: {{page_obj.paginator.count}}</h3>
       <article>
         <ul>
-          <li>
-            Автор: {{ post.author.get_full_name }}
-            {% if post.author %}
-              <a href="{% url 'posts:profile' post.author.username %}">все посты пользователя</a>
-            {% endif %}
-          </li>
+          {% if  not author %}<li>Автор: {{ post.author.get_full_name }}</li>{% endif %}
           <li>Дата публикации: {{ post.pub_date|date:"d E Y" }}</li>
         </ul>
         <p>
           {{ post.text|linebreaks }}
         </p>
-        {% if post.author %}
-          <a href="{% url 'posts:post_detail' post.pk %}">подробная информация</a>
-        {% endif %}
+        <a href="{% url 'posts:post_detail' post.pk %}">подробная информация</a>
       </article>
       {% if post.group %}
         <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы</a>

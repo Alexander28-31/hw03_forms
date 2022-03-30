@@ -2,8 +2,8 @@
 {% block title %}Записи сообщества {{ group.title }}{% endblock %}
 {% block content %}
   <div class="container py-5">
-    {% for post in page_obj %}
-      <h1>{{ group }}</h1>
+      <h1>{{group.title }}</h1>
+      {% for post in page_obj %}
       <p>
         {{ group.description }}
       </p>

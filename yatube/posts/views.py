@@ -1,21 +1,9 @@
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import PostForm
 from .models import Group, Post, User
-
-
-def get_page_pages(queryset, request):
-    paginator = Paginator(queryset, settings.POSTS_PER_PAGE)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return{
-        'paginator': paginator,
-        'page_number': page_number,
-        'page_obj': page_obj,
-    }
+from .utils import get_page_pages
 
 
 def index(request):
@@ -38,12 +26,10 @@ def group_posts(request, slug):
 def profile(request, username):
     """Выводит шаблон профайла пользователя."""
     author = get_object_or_404(User, username=username)
-    author_post = Post.objects.filter(author=author)
-    count = author_post.count()
+    posts = Post.objects.select_related('author')
     context = {
         'author': author,
-        'count': count,
-        'author_post': author_post,
+        'posts': posts,
     }
     context.update(get_page_pages(
         Post.objects.filter(author=author), request))
@@ -52,12 +38,11 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = Post.objects.select_related('author', 'group').get(id=post_id)
-    post_count = Post.objects.filter(author=post.author).count
-
     context = {
         'post': post,
-        'post_count': post_count,
     }
+    context.update(get_page_pages(
+        Post.objects.filter(author=post.author), request))
     return render(request, 'posts/post_detail.html', context)
 
 
@@ -81,7 +66,6 @@ def post_edit(request, post_id):
     form = PostForm(request.POST or None, instance=post)
     if form.is_valid():
         post = form.save(commit=False)
-        post.author = request.user
         form.save()
         return redirect('posts:post_detail', post_id=post_id)
     return render(request, 'posts/post_create.html', {'form': form,
