@@ -19,17 +19,17 @@ def group_posts(request, slug):
     context = {
         'group': group,
     }
-    context.update(get_page_pages(group.posts.all(), request))
+    context.update(get_page_pages(
+        Post.objects.select_related('author', 'group')
+        .filter(group__slug=slug), request))
     return render(request, 'posts/group_list.html', context)
 
 
 def profile(request, username):
     """Выводит шаблон профайла пользователя."""
     author = get_object_or_404(User, username=username)
-    posts = Post.objects.select_related('author')
     context = {
         'author': author,
-        'posts': posts,
     }
     context.update(get_page_pages(
         Post.objects.filter(author=author), request))
@@ -37,16 +37,16 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    post = Post.objects.select_related('author', 'group').get(id=post_id)
+    # post = Post.objects.select_related('author', 'group').get(id=post_id)
+    post = get_object_or_404(Post.objects.select_related(
+    ), id=post_id)
     context = {
         'post': post,
     }
-    context.update(get_page_pages(
-        Post.objects.filter(author=post.author), request))
     return render(request, 'posts/post_detail.html', context)
 
 
-@login_required
+@ login_required
 def post_create(request):
     form = PostForm(request.POST or None)
     if form.is_valid():
@@ -57,7 +57,7 @@ def post_create(request):
     return render(request, 'posts/post_create.html', {'form': form})
 
 
-@login_required
+@ login_required
 def post_edit(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     is_edit = True
@@ -65,7 +65,6 @@ def post_edit(request, post_id):
         return redirect('posts:post_detail', post.pk)
     form = PostForm(request.POST or None, instance=post)
     if form.is_valid():
-        post = form.save(commit=False)
         form.save()
         return redirect('posts:post_detail', post_id=post_id)
     return render(request, 'posts/post_create.html', {'form': form,
