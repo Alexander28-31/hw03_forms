@@ -8,10 +8,10 @@
     </p>
     {% for post in page_obj %}
       <article>
-        {% include 'posts/one_post.html' %}
+        {% include 'includes/one_post.html' %}
       </article>
       {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
-    {% include 'posts/paginator.html' %}
+    {% include 'includes/paginator.html' %}
   </div>
 {% endblock %}

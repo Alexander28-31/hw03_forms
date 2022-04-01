@@ -18,7 +18,7 @@
           Новый пост
         {% endif %}
         <div class="card-body">
-          {% include 'posts/form_errors.html' %}
+          {% include 'includes/form_errors.html' %}
           <form method="post"
             {% if action_url %} action=" {% if post %} {% url 'posts:post_edit' %} {% else %} {% url 'posts:post_create' %} {% endif %}"
           {% endif %}>

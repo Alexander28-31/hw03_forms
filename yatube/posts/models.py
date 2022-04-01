@@ -8,21 +8,25 @@ Group = 'Group'
 class Post(models.Model):
     """Модель для хранения постов."""
 
-    text = models.TextField(verbose_name='Description')
+    text = models.TextField(verbose_name='Описание',
+                            help_text='Введите текст поста')
     pub_date = models.DateTimeField(auto_now_add=True,
-                                    verbose_name='Date of publication')
-    author = models.TextField(verbose_name='Author')
+                                    verbose_name='Дата публикации')
+    author = models.TextField(verbose_name='Автор')
     group = models.ForeignKey(
         Group,
         related_name='posts',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
+        verbose_name='Группа',
+        help_text='Группа к которой будет относится пост'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='posts',
+        verbose_name='Автор'
     )
 
     class Meta:

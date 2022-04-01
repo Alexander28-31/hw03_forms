@@ -20,7 +20,7 @@ def group_posts(request, slug):
         'group': group,
     }
     context.update(get_page_pages(
-        Post.objects.select_related('author', 'group')
+        group.posts.select_related('author', 'group')
         .filter(group__slug=slug), request))
     return render(request, 'posts/group_list.html', context)
 
@@ -32,12 +32,12 @@ def profile(request, username):
         'author': author,
     }
     context.update(get_page_pages(
-        Post.objects.filter(author=author), request))
+        author.posts.filter(), request))
     return render(request, 'posts/profile.html', context)
 
 
 def post_detail(request, post_id):
-    # post = Post.objects.select_related('author', 'group').get(id=post_id)
+    """Выводит информацию о посте."""
     post = get_object_or_404(Post.objects.select_related(
     ), id=post_id)
     context = {
@@ -48,6 +48,7 @@ def post_detail(request, post_id):
 
 @ login_required
 def post_create(request):
+    """Создания новго поста."""
     form = PostForm(request.POST or None)
     if form.is_valid():
         post = form.save(commit=False)
@@ -59,6 +60,7 @@ def post_create(request):
 
 @ login_required
 def post_edit(request, post_id):
+    """Редактирование поста."""
     post = get_object_or_404(Post, id=post_id)
     is_edit = True
     if post.author != request.user:
