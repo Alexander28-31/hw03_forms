@@ -36,8 +36,6 @@ class GrropURLTests(TestCase):
             'posts/group_list': '/group/<slug>/',
             'posts/profile': '/profile/<username>/',
             'posts/posts_detail': '/post/<post_id>/',
-            'posts/create_post': '/post/<post_id>/edit/',
-            'posts/create_post': '/create/',
         }
         for template, address in templates_url_name.items():
             with self.subTest(address=address):
