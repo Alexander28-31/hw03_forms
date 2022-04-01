@@ -20,8 +20,7 @@ def group_posts(request, slug):
         'group': group,
     }
     context.update(get_page_pages(
-        group.posts.select_related('author', 'group')
-        .filter(group__slug=slug), request))
+        group.posts.select_related('author', 'group'), request))
     return render(request, 'posts/group_list.html', context)
 
 
@@ -32,7 +31,7 @@ def profile(request, username):
         'author': author,
     }
     context.update(get_page_pages(
-        author.posts.filter(), request))
+        author.posts, request))
     return render(request, 'posts/profile.html', context)
 
 
