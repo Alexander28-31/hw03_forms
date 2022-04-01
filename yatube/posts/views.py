@@ -31,7 +31,7 @@ def profile(request, username):
         'author': author,
     }
     context.update(get_page_pages(
-        author.posts, request))
+        author.posts.all(), request))
     return render(request, 'posts/profile.html', context)
 
 
